@@ -1,0 +1,97 @@
+pipeline {
+    /* insert Declarative Pipeline here */
+}
+
+
+Agent(pipeline/stage level)
+============================
+1.agent any
+2.agent none
+3.agent { 
+     label 'my-defined-label' 
+  }
+4.agent { 
+     node { 
+       label 'labelName' 
+     }
+  }
+
+it is same as label but it allows for additional option such as customWorkspace
+
+agent { 
+     node { 
+       label 'labelName' 
+       customWorkspace '/some/other/path'
+     }
+  }
+
+5.for docker 
+==============
+agent { 
+  docker 'maven:3-alpine' 
+}
+or
+agent { 
+   docker {
+      label 'my-defined-label' 
+   }
+}
+6. stage level
+===================
+pipeline {
+    agent none 
+    stages {
+        stage('Example Build') {
+            agent { docker 'maven:3-alpine' } 
+            steps {
+                echo 'Hello, Maven'
+                sh 'mvn --version'
+            }
+        }
+        stage('Example Test') {
+            agent { docker 'openjdk:8-jre' } 
+            steps {
+                echo 'Hello, JDK'
+                sh 'java -version'
+            }
+        }
+    }
+}
+
+Practice
+==========
+pipeline {
+   agent any
+   agent none
+   agent {
+      label 'slave'
+   }
+   agent {
+      node {
+        label 'slave'
+      }
+   }
+   agent {
+      node {
+         label 'slave'
+         customWorkspace '/home/vijay/work/'
+      }
+   }
+   agent {
+      docker 'image name'
+   }
+   agent {
+       docker {
+           label 'image name'
+       }
+   }
+   agent {
+   stages {
+      stage ()
+         agent {
+            label 'slave'
+         }
+         steps {}
+       }
+    }
+}
